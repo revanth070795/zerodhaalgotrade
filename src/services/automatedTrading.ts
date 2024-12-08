@@ -1,4 +1,4 @@
-import { KiteService } from './kiteService.ts';
+import KiteService from './kiteService.ts';
 import { TradingStrategy } from './tradingStrategy.ts';
 import { StockQuote } from '../types/kite.ts';
 

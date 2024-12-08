@@ -1,4 +1,4 @@
-import KiteConnect from 'kiteconnect';
+import { KiteConnect } from 'kiteconnect';
 import { KiteCredentials, StockQuote, Order, Position } from '../types/kite.ts';
 
 class KiteService {

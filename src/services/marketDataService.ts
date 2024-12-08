@@ -1,4 +1,4 @@
-import { KiteService } from './kiteService.ts';
+import KiteService from './kiteService.ts';
 import { StockQuote, Stock } from '../types/kite.ts';
 
 export class MarketDataService {
