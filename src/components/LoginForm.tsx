@@ -2,17 +2,31 @@ import React, { useState } from 'react';
 import { Key, Lock } from 'lucide-react';
 import { useAuthStore } from '../store/authStore.ts';
 import { AuthService } from '../services/authService.ts';
+import { authAPI } from '../services/api.ts';
 
 const LoginForm: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [apiSecret, setApiSecret] = useState('');
   const setCredentials = useAuthStore((state) => state.setCredentials);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setCredentials({ apiKey, apiSecret });
-    // Redirect to Zerodha login
-    window.location.href = AuthService.generateLoginUrl(apiKey);
+    try {
+      const loginRes = await authAPI.login(apiKey, apiSecret);
+      if (loginRes && loginRes.loginUrl) {
+        window.location.href = loginRes.loginUrl;
+      } else {
+        // Handle login failure
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+    // // Redirect to Zerodha login
+    // const loginRes = await authAPI.login(apiKey, apiSecret);
+    // window.location.href = loginRes.loginUrl;
+    // window.location.href = AuthService.generateLoginUrl(apiKey);
   };
 
   return (

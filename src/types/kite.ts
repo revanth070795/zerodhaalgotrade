@@ -2,6 +2,7 @@ export interface KiteCredentials {
   apiKey: string;
   apiSecret: string;
   requestToken?: string;
+  accessToken?: string;
 }
 
 export interface StockQuote {

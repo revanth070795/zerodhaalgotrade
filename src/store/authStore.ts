@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { KiteCredentials } from '../types/kite.ts';
 import { AuthService } from '../services/authService.ts';
+import { authAPI } from '../services/api.ts';
 
 interface AuthState {
   credentials: KiteCredentials | null;
@@ -8,7 +9,7 @@ interface AuthState {
   setCredentials: (credentials: KiteCredentials) => void;
   logout: () => void;
   initializeAuth: () => void;
-  handleRedirect: () => boolean;
+  handleRedirect: () => Promise<boolean>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -32,12 +33,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  handleRedirect: () => {
+  handleRedirect: async () => {
     const requestToken = AuthService.getRequestTokenFromUrl();
     if (requestToken && get().credentials?.apiKey && get().credentials?.apiSecret) {
+      const accessTokenRes = await authAPI.callback(requestToken, get().credentials?.apiKey || '');
+      const accessToken = accessTokenRes.accessToken;
       const updatedCredentials = {
         ...get().credentials!,
         requestToken,
+        accessToken,
       };
       get().setCredentials(updatedCredentials);
       // Remove the request_token from URL without refreshing
