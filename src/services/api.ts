@@ -1,10 +1,8 @@
 import axios from 'axios';
 import { AuthService } from '../services/authService.ts';
-import KiteService from '../services/kiteService.ts';
+// import KiteService from '../services/kiteService.ts';
 
 const API_URL = 'http://localhost:3001/api';
-
-const accessToken = new KiteService().accessToken;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,7 +12,7 @@ const api = axios.create({
 });
 
 // Add API key to requests if available
-api.interceptors.request.use(config => {
+api.interceptors.request.use(async (config) => {
   const savedCredentials: any = AuthService.getCredentialsFromCookie() || {};
   if (savedCredentials.apiKey) {
     config.headers.apiKey = savedCredentials.apiKey;
@@ -26,12 +24,12 @@ api.interceptors.request.use(config => {
     // config.headers.Authorization = `token api_key:${savedCredentials.accessToken}`;
     config.headers.Authorization = savedCredentials.accessToken;
   }
-  // const accessToken = new KiteService(savedCredentials).accessToken;
-  // if (!accessToken) {
-  //   const access_token = await authAPI.callback(savedCredentials.requestToken, savedCredentials.apiKey);
-  //   config.headers.accessToken = `token api_key:${access_token.accessToken}`;
-  // } else if (accessToken) {
-  //   config.headers.accessToken = `token api_key:${accessToken}`;
+  // const kiteService = new KiteService(savedCredentials);
+  // if (!kiteService.accessToken) {
+  //   const access_token = await kiteService.handleCallback(savedCredentials.requestToken);
+  //   config.headers.accessToken = access_token;
+  // } else if (kiteService.accessToken) {
+  //   config.headers.accessToken = kiteService.accessToken;
   // } 
   return config;
 });

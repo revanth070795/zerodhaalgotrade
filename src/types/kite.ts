@@ -7,8 +7,8 @@ export interface KiteCredentials {
 
 export interface StockQuote {
   symbol: string;
-  lastPrice: number;
-  change: number;
+  last_price: number;
+  net_change: number;
   changePercent: number;
   volume: number;
   high: number;

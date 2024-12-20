@@ -7,14 +7,14 @@ interface StockQuoteCardProps {
 }
 
 const StockQuoteCard: React.FC<StockQuoteCardProps> = ({ quote }) => {
-  const isPositive = quote.change >= 0;
+  const isPositive = quote.net_change >= 0;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-xl font-semibold text-gray-900">{quote.symbol}</h3>
-          <p className="text-3xl font-bold mt-2">₹{quote.lastPrice.toFixed(2)}</p>
+          <p className="text-3xl font-bold mt-2">₹{quote?.last_price?.toFixed(2)}</p>
         </div>
         <div className={`flex items-center ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
           {isPositive ? (

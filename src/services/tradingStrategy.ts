@@ -15,7 +15,7 @@ export class TradingStrategy {
   private lastSignal: TradeSignal | null = null;
 
   analyzeMarket(quote: StockQuote, balance: number): TradeSignal {
-    const currentPrice = quote.lastPrice;
+    const currentPrice = quote.last_price;
     
     // Prevent multiple signals in short succession
     if (this.lastSignal && Date.now() - this.lastSignal.timestamp < 5 * 60 * 1000) {
@@ -60,9 +60,9 @@ export class TradingStrategy {
     // 2. Volume is above average
     // 3. Price is showing some recovery (positive change)
     
-    const nearDayLow = quote.lastPrice <= quote.low * 1.05;
+    const nearDayLow = quote.last_price <= quote.low * 1.05;
     const highVolume = quote.volume > quote.volume * 1.2; // 20% above average
-    const positiveChange = quote.change > 0;
+    const positiveChange = quote.net_change > 0;
 
     return nearDayLow && highVolume && positiveChange;
   }

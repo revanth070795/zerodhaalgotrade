@@ -45,7 +45,7 @@ class KiteService {
   //     const quote = response[symbol];
   //     return {
   //       symbol,
-  //       lastPrice: quote.last_price,
+  //       last_price: quote.last_price,
   //       change: quote.change,
   //       changePercent: quote.change_percent,
   //       volume: quote.volume,
@@ -131,6 +131,7 @@ class KiteService {
     try {
       const { accessToken } = await authAPI.callback(requestToken, this.credentials.apiKey);
       this.accessToken = accessToken;
+      return accessToken;
     } catch (error) {
       console.error('Callback failed:', error);
       throw error;
@@ -139,10 +140,10 @@ class KiteService {
 
   async getQuote(symbol: string): Promise<StockQuote> {
     try {
-      const quote = await marketAPI.getQuote(symbol);
+      const quote = await marketAPI.getQuote(`NSE:${symbol}`);
       return {
         symbol,
-        lastPrice: quote.last_price,
+        last_price: quote.last_price,
         change: quote.change,
         changePercent: quote.change_percent,
         volume: quote.volume,

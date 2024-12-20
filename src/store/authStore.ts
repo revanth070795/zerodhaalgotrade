@@ -36,8 +36,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   handleRedirect: async () => {
     const requestToken = AuthService.getRequestTokenFromUrl();
     if (requestToken && get().credentials?.apiKey && get().credentials?.apiSecret) {
-      const accessTokenRes = await authAPI.callback(requestToken, get().credentials?.apiKey || '');
-      const accessToken = accessTokenRes.accessToken;
+      const { accessToken } = await authAPI.callback(requestToken, get().credentials?.apiKey || '');
       const updatedCredentials = {
         ...get().credentials!,
         requestToken,

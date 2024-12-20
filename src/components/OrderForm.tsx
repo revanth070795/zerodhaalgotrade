@@ -30,7 +30,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
 
     const handleQuote = (quote: StockQuote) => {
       setCurrentQuote(quote);
-      setPrice(quote.lastPrice.toString());
+      setPrice(quote?.last_price?.toString());
     };
 
     marketDataService.subscribeToSymbol(symbol, handleQuote);
@@ -51,7 +51,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
     });
     // Reset form
     setQuantity('');
-    setPrice(currentQuote?.lastPrice.toString() || '');
+    setPrice(currentQuote?.last_price.toString() || '');
   };
 
   return (
@@ -79,9 +79,9 @@ const OrderForm: React.FC<OrderFormProps> = ({
         {currentQuote && (
           <div className="p-3 bg-gray-50 rounded-md">
             <p className="text-sm text-gray-600">Current Market Price</p>
-            <p className="text-lg font-semibold">₹{currentQuote.lastPrice.toFixed(2)}</p>
-            <p className={`text-sm ${currentQuote.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {currentQuote.change >= 0 ? '+' : ''}{currentQuote.changePercent.toFixed(2)}%
+            <p className="text-lg font-semibold">₹{currentQuote?.last_price?.toFixed(2)}</p>
+            <p className={`text-sm ${currentQuote?.net_change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {currentQuote?.net_change >= 0 ? '+' : ''}{currentQuote?.changePercent?.toFixed(2)}%
             </p>
           </div>
         )}

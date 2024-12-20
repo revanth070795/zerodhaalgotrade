@@ -56,7 +56,7 @@ export class StrategyAnalyzer {
 
     return {
       action: 'HOLD',
-      price: quote.lastPrice,
+      price: quote.last_price,
       quantity: 0,
       reason: 'No strong signals from any strategy'
     };
@@ -84,9 +84,9 @@ export class StrategyAnalyzer {
 
         if (decision.action === 'BUY' && position === 'NONE') {
           position = 'LONG';
-          entryPrice = quote.lastPrice;
+          entryPrice = quote.last_price;
         } else if (decision.action === 'SELL' && position === 'LONG') {
-          profit += ((quote.lastPrice - entryPrice) / entryPrice) * 100;
+          profit += ((quote.last_price - entryPrice) / entryPrice) * 100;
           position = 'NONE';
         }
       });

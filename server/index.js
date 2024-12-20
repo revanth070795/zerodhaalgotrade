@@ -84,8 +84,8 @@ app.post('/api/auth/callback', async (req, res) => {
 
 app.get('/api/market/instruments', async (req, res) => {
   try {
-    const { apiKey } = req.headers;
-    const instance = kiteInstances.get(apiKey);
+    const { apiKey, apikey } = req.headers;
+    const instance = kiteInstances.get(apiKey || apikey);
     
     if (!instance) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -99,18 +99,36 @@ app.get('/api/market/instruments', async (req, res) => {
   }
 });
 
+app.get('/api/user/profile', async (req, res) => {
+  try {
+    const { apiKey, apikey } = req.headers;
+    const { symbol } = req.params;
+    const instance = kiteInstances.get(apiKey || apikey);
+    
+    if (!instance) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const quote = await instance.kite.getProfile();
+    res.json(quote);
+  } catch (error) {
+    logger.error('Get quote error:', error);
+    res.status(500).json({ error: 'Failed to fetch quote' });
+  }
+});
+
 app.get('/api/market/quote/:symbol', async (req, res) => {
   try {
-    const { apiKey } = req.headers;
+    const { apiKey, apikey } = req.headers;
     const { symbol } = req.params;
-    const instance = kiteInstances.get(apiKey);
+    const instance = kiteInstances.get(apiKey || apikey);
     
     if (!instance) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const quote = await instance.kite.getQuote([symbol]);
-    res.json(quote);
+    res.json(quote[symbol]);
   } catch (error) {
     logger.error('Get quote error:', error);
     res.status(500).json({ error: 'Failed to fetch quote' });
@@ -119,8 +137,8 @@ app.get('/api/market/quote/:symbol', async (req, res) => {
 
 app.get('/api/trading/positions', async (req, res) => {
   try {
-    const { apiKey } = req.headers;
-    const instance = kiteInstances.get(apiKey);
+    const { apiKey, apikey } = req.headers;
+    const instance = kiteInstances.get(apiKey || apikey);
     
     if (!instance) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -136,9 +154,9 @@ app.get('/api/trading/positions', async (req, res) => {
 
 app.post('/api/trading/orders', async (req, res) => {
   try {
-    const { apiKey } = req.headers;
+    const { apiKey, apikey } = req.headers;
     const { symbol, type, quantity, price } = req.body;
-    const instance = kiteInstances.get(apiKey);
+    const instance = kiteInstances.get(apiKey || apikey);
     
     if (!instance) {
       return res.status(401).json({ error: 'Unauthorized' });

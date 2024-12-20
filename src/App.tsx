@@ -69,8 +69,8 @@ const App: React.FC = () => {
       };
 
       fetchPositions();
-      const interval = setInterval(fetchPositions, 5000);
-      return () => clearInterval(interval);
+      // const interval = setInterval(fetchPositions, 5000);
+      // return () => clearInterval(interval);
     }
   }, [kiteService]);
 
@@ -85,7 +85,7 @@ const App: React.FC = () => {
           ...existingData,
           {
             timestamp: new Date().toLocaleTimeString(),
-            price: quote.lastPrice,
+            price: quote.last_price,
           },
         ].slice(-50));
         return newData;

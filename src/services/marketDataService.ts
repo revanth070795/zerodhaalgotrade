@@ -39,7 +39,7 @@ export class MarketDataService {
   private handleTickerData(data: any) {
     const quote: StockQuote = {
       symbol: data.symbol,
-      lastPrice: data.last_price,
+      last_price: data.last_price,
       change: data.change,
       changePercent: data.change_percent,
       volume: data.volume,
@@ -109,7 +109,8 @@ export class MarketDataService {
       now - this.lastTopStocksUpdate > this.topStocksUpdateInterval
     ) {
       try {
-        const instruments = await this.kiteService.getInstruments();
+        // const instruments = await this.kiteService.getInstruments();
+        const instruments = [] as Stock[];
         const stocks = instruments
           .filter((inst: any) => inst.exchange === 'NSE')
           .map((inst: any) => ({
@@ -122,7 +123,7 @@ export class MarketDataService {
 
         // Get quotes for all stocks
         const quotes = await Promise.all(
-          stocks.map(stock => this.getSnapshot(stock.symbol))
+          stocks.map(stock => this.getSnapshot(`${stock.symbol}`))
         );
 
         // Sort by volume and price movement
