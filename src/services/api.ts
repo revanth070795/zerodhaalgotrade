@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AuthService } from '../services/authService.ts';
 // import KiteService from '../services/kiteService.ts';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'https://zerodhaalgotradeapi-production.up.railway.app/api';
 
 const api = axios.create({
   baseURL: API_URL,

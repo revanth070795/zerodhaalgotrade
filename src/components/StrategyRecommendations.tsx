@@ -3,6 +3,7 @@ import { Stock, StockQuote } from '../types/kite.ts';
 import { StrategyAnalyzer } from '../services/StrategyAnalyzer.ts';
 import { MarketDataService } from '../services/marketDataService.ts';
 import { TrendingUp, TrendingDown, AlertCircle, Activity } from 'lucide-react';
+import { balanceAmount } from '../constants/config.js';
 
 interface StrategyRecommendationsProps {
   marketDataService: MarketDataService | null;
@@ -42,7 +43,7 @@ const StrategyRecommendations: React.FC<StrategyRecommendationsProps> = ({
             const decision = strategyAnalyzer.analyzeStock(
               stock.symbol,
               quote,
-              100000
+              balanceAmount
             );
 
             return {

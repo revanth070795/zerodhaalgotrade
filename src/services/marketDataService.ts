@@ -40,11 +40,11 @@ export class MarketDataService {
     const quote: StockQuote = {
       symbol: data.symbol,
       last_price: data.last_price,
-      change: data.change,
+      net_change: data.net_change,
       changePercent: data.change_percent,
       volume: data.volume,
-      high: data.high,
-      low: data.low,
+      high: data?.ohlc?.high,
+      low: data?.ohlc?.low,
     };
 
     const subscribers = this.subscribers.get(quote.symbol);

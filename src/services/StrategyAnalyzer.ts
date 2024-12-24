@@ -3,6 +3,7 @@ import { BaseStrategy } from '../strategies/BaseStrategy.ts';
 import { MovingAverageStrategy } from '../strategies/MovingAverageStrategy.ts';
 import { RSIStrategy } from '../strategies/RSIStrategy.ts';
 import { VWAPStrategy } from '../strategies/VWAPStrategy.ts';
+import { balanceAmount } from '../constants/config.js';
 
 export class StrategyAnalyzer {
   private strategies: Map<string, BaseStrategy> = new Map();
@@ -14,7 +15,7 @@ export class StrategyAnalyzer {
       targetProfit: 0.03, // 3%
       stopLoss: 0.015,    // 1.5%
       timeframe: 300,     // 5 minutes
-      volumeThreshold: 100000
+      volumeThreshold: balanceAmount
     };
 
     this.strategies.set('MA', new MovingAverageStrategy(defaultConfig));
@@ -79,7 +80,7 @@ export class StrategyAnalyzer {
         const decision = strategy.analyze(
           quote,
           historicalData.slice(0, index + 1),
-          100000
+          balanceAmount
         );
 
         if (decision.action === 'BUY' && position === 'NONE') {

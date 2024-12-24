@@ -144,11 +144,11 @@ class KiteService {
       return {
         symbol,
         last_price: quote.last_price,
-        change: quote.change,
+        net_change: quote.net_change,
         changePercent: quote.change_percent,
         volume: quote.volume,
-        high: quote.high,
-        low: quote.low,
+        high: quote?.ohlc?.high || null,
+        low: quote?.ohlc?.low || null,
       };
     } catch (error) {
       console.error('Failed to fetch quote:', error);

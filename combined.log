@@ -14,3 +14,11 @@
 {"data":null,"error_type":"TokenException","level":"error","message":"Callback error: Token is invalid or has expired.","status":"error","timestamp":"2024-12-09T06:59:32.839Z"}
 {"data":null,"error_type":"TokenException","level":"error","message":"Callback error: Token is invalid or has expired.","status":"error","timestamp":"2024-12-09T07:07:40.797Z"}
 {"data":null,"error_type":"TokenException","level":"error","message":"Callback error: Token is invalid or has expired.","status":"error","timestamp":"2024-12-09T07:13:02.018Z"}
+{"level":"info","message":"Server running on port 3001","timestamp":"2024-12-24T03:53:48.370Z"}
+{"data":null,"error_type":"InputException","level":"error","message":"Get positions error: Invalid `api_key` or `access_token`.","status":"error","timestamp":"2024-12-24T03:54:38.063Z"}
+{"data":null,"error_type":"TokenException","level":"error","message":"Callback error: Token is invalid or has expired.","status":"error","timestamp":"2024-12-24T03:54:58.768Z"}
+{"data":null,"error_type":"InputException","level":"error","message":"Get positions error: Invalid `api_key` or `access_token`.","status":"error","timestamp":"2024-12-24T03:54:58.842Z"}
+{"level":"info","message":"Server running on port 3001","timestamp":"2024-12-24T04:41:45.947Z"}
+{"data":null,"error_type":"InputException","level":"error","message":"Get positions error: Invalid `api_key` or `access_token`.","status":"error","timestamp":"2024-12-24T04:42:08.526Z"}
+{"data":null,"error_type":"TokenException","level":"error","message":"Callback error: Token is invalid or has expired.","status":"error","timestamp":"2024-12-24T04:42:25.310Z"}
+{"data":null,"error_type":"InputException","level":"error","message":"Get positions error: Invalid `api_key` or `access_token`.","status":"error","timestamp":"2024-12-24T04:42:25.375Z"}

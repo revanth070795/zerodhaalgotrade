@@ -1,11 +1,12 @@
 import KiteService from './kiteService.ts';
 import { TradingStrategy } from './tradingStrategy.ts';
 import { StockQuote } from '../types/kite.ts';
+import { balanceAmount } from '../constants/config.js';
 
 export class AutomatedTrading {
   private strategy: TradingStrategy;
   private isRunning: boolean = false;
-  private balance: number = 100000; // Initial balance of ₹1,00,000
+  private balance: number = balanceAmount; // Initial balance of ₹1,00,000
 
   constructor(private kiteService: KiteService) {
     this.strategy = new TradingStrategy();
