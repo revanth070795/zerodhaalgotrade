@@ -33,10 +33,10 @@ const StrategyRecommendations: React.FC<StrategyRecommendationsProps> = ({
         const stocks = await marketDataService.getTopStocks();
         const analyzed = await Promise.all(
           stocks.map(async (stock) => {
-            const quote = await marketDataService.getSnapshot(stock.symbol);
+            const quote = stock.quote || await marketDataService.getSnapshot(stock.symbol);
             strategyAnalyzer.addQuote(stock.symbol, quote);
             const performance = strategyAnalyzer.getStrategyPerformance(stock.symbol);
-            const bestStrategy = Object.entries(performance).reduce(
+            const bestStrategy = performance && Object.keys(performance)?.length && Object.entries(performance).reduce(
               (a, b) => (b[1] > a[1] ? b : a)
             )[0];
 
@@ -95,15 +95,15 @@ const StrategyRecommendations: React.FC<StrategyRecommendationsProps> = ({
                 <h3 className="font-semibold text-lg">{stock.symbol}</h3>
                 <p className="text-sm text-gray-600">{stock.name}</p>
               </div>
-              <div className={`flex items-center ${quote.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {quote.change >= 0 ? (
+              <div className={`flex items-center ${quote.net_change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {quote.net_change >= 0 ? (
                   <TrendingUp className="w-4 h-4 mr-1" />
                 ) : (
                   <TrendingDown className="w-4 h-4 mr-1" />
                 )}
                 <span className="font-medium">
-                  {quote.change >= 0 ? '+' : ''}
-                  {quote.changePercent.toFixed(2)}%
+                  {quote.net_change >= 0 ? '+' : ''}
+                  {quote?.changePercent?.toFixed(2)}%
                 </span>
               </div>
             </div>
@@ -115,7 +115,7 @@ const StrategyRecommendations: React.FC<StrategyRecommendationsProps> = ({
               </div>
               <div>
                 <p className="text-sm text-gray-500">Historical Performance</p>
-                <p className="font-medium text-green-600">+{performance.toFixed(2)}%</p>
+                <p className="font-medium text-green-600">+{performance?.toFixed(2)}%</p>
               </div>
             </div>
 

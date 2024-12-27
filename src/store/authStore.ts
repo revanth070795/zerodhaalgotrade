@@ -18,7 +18,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   setCredentials: (credentials) => {
     AuthService.saveCredentialsToCookie(credentials);
-    set({ credentials, isAuthenticated: true });
+    set({ credentials, isAuthenticated: credentials.isAuthenticated ? true : false });
   },
 
   logout: () => {
@@ -41,6 +41,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         ...get().credentials!,
         requestToken,
         accessToken,
+        isAuthenticated: true
       };
       get().setCredentials(updatedCredentials);
       // Remove the request_token from URL without refreshing

@@ -3,6 +3,7 @@ export interface KiteCredentials {
   apiSecret: string;
   requestToken?: string;
   accessToken?: string;
+  isAuthenticated?: boolean;
 }
 
 export interface StockQuote {
@@ -46,6 +47,7 @@ export interface Stock {
   sector: string;
   exchange: string;
   instrumentToken: number;
+  quote?: StockQuote;
 }
 
 export interface TradingSession {

@@ -1,5 +1,6 @@
 import KiteService from './kiteService.ts';
 import { StockQuote, Stock } from '../types/kite.ts';
+import { AuthService } from './authService.ts';
 
 export class MarketDataService {
   private subscribers: Map<string, Set<(quote: StockQuote) => void>> = new Map();
@@ -16,10 +17,14 @@ export class MarketDataService {
 
   private initializeWebSocket() {
     try {
+      if (this.websocket.readyState === WebSocket.CLOSED) {
+        const savedCredentials: any = AuthService.getCredentialsFromCookie() || {};
+        this.kiteService.initializeWebSocket(savedCredentials.accessToken);
+      } 
       this.websocket = this.kiteService.getWebSocket();
       
       this.websocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+        const data = event?.data && typeof event.data === 'string' ? JSON.parse(event.data) : {};
         this.handleTickerData(data);
       };
 
@@ -103,6 +108,10 @@ export class MarketDataService {
   }
 
   async getTopStocks(): Promise<Stock[]> {
+
+    // const topStocks = await this.kiteService.getTopStocks();
+
+    // return topStocks;
     const now = Date.now();
     if (
       this.cachedTopStocks.length === 0 ||

@@ -44,9 +44,9 @@ const StockSelector: React.FC<StockSelectorProps> = ({
     setIsLoading(true);
     setError(null);
     try {
-      // const popularStocks = await instrumentService.getPopularStocks();
-      // setStocks(popularStocks);
-      setStocks([] as Stock[]);
+      const popularStocks = await instrumentService.getPopularStocks();
+      setStocks(popularStocks);
+      // setStocks([] as Stock[]);
     } catch (err) {
       setError('Failed to load popular stocks');
       console.error(err);

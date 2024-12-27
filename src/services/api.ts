@@ -55,6 +55,11 @@ export const marketAPI = {
   getQuote: async (symbol: string) => {
     const response = await api.get(`/market/quote/${symbol}`);
     return response.data;
+  },
+
+  getTopStocks: async () => {
+    const response = await api.get('/market/top-stocks');
+    return response.data;
   }
 };
 

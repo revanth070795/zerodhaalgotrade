@@ -3,8 +3,8 @@ import { KiteCredentials, StockQuote, Order, Position } from '../types/kite.ts';
 import { authAPI, marketAPI, tradingAPI } from './api.ts';
 
 class KiteService {
-  // private kite: any;
-  // private webSocket: WebSocket | null = null;
+  private kite: any;
+  private webSocket: WebSocket | null = null;
 
   // constructor(credentials: KiteCredentials) {
   //   this.kite = new KiteConnect({
@@ -27,17 +27,17 @@ class KiteService {
   //   }
   // }
 
-  // private initializeWebSocket(accessToken: string) {
-  //   const wsUrl = `wss://ws.kite.trade?api_key=${this.kite.api_key}&access_token=${accessToken}`;
-  //   this.webSocket = new WebSocket(wsUrl);
-  // }
+  initializeWebSocket(accessToken: string) {
+    const wsUrl = `wss://ws.kite.trade?api_key=${this.kite.api_key}&access_token=${accessToken}`;
+    this.webSocket = new WebSocket(wsUrl);
+  }
 
-  // getWebSocket(): WebSocket {
-  //   if (!this.webSocket) {
-  //     throw new Error('WebSocket not initialized. Please ensure you are logged in.');
-  //   }
-  //   return this.webSocket;
-  // }
+  getWebSocket(): WebSocket {
+    if (!this.webSocket) {
+      throw new Error('WebSocket not initialized. Please ensure you are logged in.');
+    }
+    return this.webSocket;
+  }
 
   // async getQuote(symbol: string): Promise<StockQuote> {
   //   try {
@@ -108,6 +108,9 @@ class KiteService {
 
   constructor(credentials: KiteCredentials) {
     this.credentials = credentials;
+    this.kite = new KiteConnect({
+      api_key: credentials.apiKey,
+    });
   }
 
   getAccessToken(): string {
@@ -131,6 +134,7 @@ class KiteService {
     try {
       const { accessToken } = await authAPI.callback(requestToken, this.credentials.apiKey);
       this.accessToken = accessToken;
+      this.initializeWebSocket(accessToken);
       return accessToken;
     } catch (error) {
       console.error('Callback failed:', error);
@@ -197,6 +201,15 @@ class KiteService {
       return await marketAPI.getInstruments();
     } catch (error) {
       console.error('Failed to fetch instruments:', error);
+      throw error;
+    }
+  }
+
+  async getTopStocks(): Promise<any[]> {
+    try {
+      return await marketAPI.getTopStocks();
+    } catch (error) {
+      console.error('Failed to fetch top stocks:', error);
       throw error;
     }
   }

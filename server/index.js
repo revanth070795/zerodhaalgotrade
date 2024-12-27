@@ -82,6 +82,98 @@ app.post('/api/auth/callback', async (req, res) => {
   }
 });
 
+app.get('/api/market/top-stocks', async (req, res) => {
+  try {
+    const { apiKey, apikey } = req.headers;
+    const instance = kiteInstances.get(apiKey || apikey);
+    
+    if (!instance) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const stocks = await getTopStocks(req, res);
+    const analyzed = await Promise.all(
+      stocks.map(async (stock) => {
+        const quote = await instance.kite.getQuote([`NSE:${stock.symbol}`]);
+        return {
+          ...stock,
+          ...{quote}
+        }
+      })
+    );
+    return res.json(analyzed);
+  } catch (error) {
+    logger.error('Error analyzing market:', error);
+    res.status(500).json({ error: 'Failed to analyze market' });
+  }
+});
+
+async function getTopStocks(req, res) {
+  const now = Date.now();
+  let cachedTopStocks = [];
+  let lastTopStocksUpdate = 0;
+  const topStocksUpdateInterval = 5 * 60 * 1000; // 5 minutes
+  if (
+    cachedTopStocks.length === 0 ||
+    now - lastTopStocksUpdate > topStocksUpdateInterval
+  ) {
+    try {
+      const { apiKey, apikey } = req.headers;
+      const instance = kiteInstances.get(apiKey || apikey);
+      
+      if (!instance) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const instruments = await instance.kite.getInstruments();
+
+      const stocks = instruments
+        .filter((inst) => inst.exchange === 'NSE')
+        .map((inst) => ({
+          symbol: inst.tradingsymbol,
+          name: inst.name,
+          sector: inst.segment,
+          exchange: inst.exchange,
+          instrumentToken: inst.instrument_token,
+        }));
+
+      // Get quotes for all stocks
+      const quotes = await Promise.all(
+        stocks.map(stock => instance.kite.getQuote([`NSE:${stock.symbol}`]))
+      );
+
+      // Sort by volume and price movement
+      const stocksWithMetrics = stocks.map((stock, index) => ({
+        ...stock,
+        volume: quotes[index].volume,
+        priceChange: Math.abs(quotes[index].changePercent),
+      }));
+
+      // Rank stocks based on volume and price movement
+      cachedTopStocks = stocksWithMetrics
+        .sort((a, b) => {
+          const aScore = a.volume * Math.pow(a.priceChange, 2);
+          const bScore = b.volume * Math.pow(b.priceChange, 2);
+          return bScore - aScore;
+        })
+        .map(({ symbol, name, sector, exchange, instrumentToken }) => ({
+          symbol,
+          name,
+          sector,
+          exchange,
+          instrumentToken,
+        }));
+
+      lastTopStocksUpdate = now;
+    } catch (error) {
+      console.error('Error fetching top stocks:', error);
+      return cachedTopStocks;
+    }
+  }
+
+  return cachedTopStocks;
+}
+
 app.get('/api/market/instruments', async (req, res) => {
   try {
     const { apiKey, apikey } = req.headers;
